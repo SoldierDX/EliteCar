@@ -1,0 +1,1190 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestão de Veículos, Peças e Manutenções</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f7ff;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --blue: #1d4ed8;
+      --blue-2: #2563eb;
+      --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+        "Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      background: rgba(244, 247, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .brand-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue), #60a5fa);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex: 1;
+    }
+
+    .nav-link {
+      position: relative;
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 700;
+      padding: 10px 6px;
+      border-radius: 10px;
+      transition: color 120ms ease, background 120ms ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--text);
+    }
+
+    .nav-link.active {
+      color: var(--text);
+    }
+
+    .nav-link.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -8px;
+      height: 2px;
+      background: var(--blue-2);
+      border-radius: 999px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-end;
+      min-width: 320px;
+    }
+
+    .search {
+      width: 100%;
+      max-width: 360px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      padding: 10px 12px;
+      outline: none;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.8);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 120ms ease;
+    }
+
+    .icon-btn:active { transform: scale(0.98); }
+
+    main {
+      max-width: 1200px;
+      margin: 22px auto;
+      padding: 0 16px 40px;
+    }
+
+    .page-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 10px 0 18px;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: -0.03em;
+    }
+
+    .page-title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      min-width: 270px;
+    }
+
+    .kpi {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      border-radius: 16px;
+      padding: 14px 14px;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .kpi .label {
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .kpi .value {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .kpi .icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      background: rgba(37, 99, 235, 0.08);
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 980px) {
+      .topbar-right { min-width: auto; }
+      .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .page-title h1 { font-size: 28px; }
+    }
+
+    @media (max-width: 640px) {
+      .nav { justify-content: flex-start; overflow: auto; }
+      .topbar { flex-wrap: wrap; }
+      .topbar-right { width: 100%; }
+      .search { max-width: none; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+      border-color: rgba(37, 99, 235, 0.18);
+    }
+
+    .card:active {
+      transform: translateY(-1px) scale(0.995);
+    }
+
+    .card:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, 0.35);
+      outline-offset: 2px;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      background: #2563eb;
+    }
+
+    .card.card-blue::before { background: #2563eb; }
+    .card.card-gray::before { background: #64748b; }
+    .card.card-green::before { background: #16a34a; }
+    .card.card-orange::before { background: #f97316; }
+    .card.card-red::before { background: #ef4444; }
+
+    .card-inner {
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .pill {
+      font-weight: 900;
+      font-size: 11px;
+      text-transform: uppercase;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .pill.progress {
+      background: rgba(37, 99, 235, 0.1);
+      color: #1d4ed8;
+      border-color: rgba(37, 99, 235, 0.15);
+    }
+
+    .pill.incoming {
+      background: rgba(100, 116, 139, 0.12);
+      color: #334155;
+      border-color: rgba(100, 116, 139, 0.18);
+    }
+
+    .pill.ready {
+      background: rgba(249, 115, 22, 0.12);
+      color: #9a3412;
+      border-color: rgba(249, 115, 22, 0.20);
+    }
+
+    .pill.done {
+      background: rgba(22, 163, 74, 0.12);
+      color: #14532d;
+      border-color: rgba(22, 163, 74, 0.20);
+    }
+
+    .pill.pickup {
+      background: rgba(15, 23, 42, 0.10);
+      color: #0f172a;
+      border-color: rgba(15, 23, 42, 0.18);
+    }
+
+    .badge-mini {
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      background: rgba(15, 23, 42, 0.02);
+      padding: 6px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .vehicle-title {
+      margin: 2px 0 0;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      font-weight: 950;
+    }
+
+    .card-meta {
+      color: var(--muted);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .card-notes {
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 12px;
+      line-height: 1.25;
+      margin-top: 0;
+      word-break: break-word;
+    }
+
+    .parts-title {
+      font-weight: 950;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #0f172a;
+      opacity: 0.85;
+    }
+
+    .parts {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .parts .part {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      color: #111827;
+      font-weight: 650;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 120ms ease, color 120ms ease;
+    }
+
+    .parts .part.checked {
+      color: #64748b;
+      text-decoration: line-through;
+      opacity: 0.9;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      background: rgba(37, 99, 235, 0.12);
+      border: 1px solid rgba(37, 99, 235, 0.18);
+      margin-top: 2px;
+      flex: 0 0 auto;
+    }
+
+    .parts .part.checked .dot {
+      background: #16a34a;
+      border-color: #16a34a;
+      box-shadow: inset 0 0 0 2px #ecfdf5;
+    }
+
+    .time-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 2px;
+      display: none;
+    }
+
+    .time-row .time {
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .chev {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(15, 23, 42, 0.02);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #334155;
+      flex: 0 0 auto;
+    }
+
+    .progress-block {
+      margin-top: 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .progress-bar {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.12);
+      overflow: hidden;
+      border: 1px solid rgba(37, 99, 235, 0.18);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 50%;
+      background: linear-gradient(90deg, var(--blue-2), #60a5fa);
+      border-radius: 999px;
+    }
+
+    .progress-meta {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .section-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      padding: 16px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .panel p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .list {
+      margin: 0;
+      padding-left: 16px;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .list li { margin: 7px 0; }
+
+    .cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.10), rgba(96, 165, 250, 0.10));
+      border: 1px solid rgba(37, 99, 235, 0.18);
+      padding: 12px 14px;
+      border-radius: 14px;
+    }
+
+    .cta strong { font-size: 14px; }
+
+    .btn {
+      border: 0;
+      background: var(--blue-2);
+      color: #fff;
+      font-weight: 900;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn.secondary {
+      background: rgba(15, 23, 42, 0.06);
+      color: var(--text);
+      box-shadow: none;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+    }
+
+    .muted-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.48);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+    }
+
+    .modal-overlay[hidden] {
+      display: none !important;
+    }
+
+    .modal-panel {
+      width: min(460px, 100%);
+      margin-top: 0;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .modal-header {
+      padding: 16px 16px 12px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    }
+
+    .modal-header h2 {
+      margin: 8px 0 0;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .modal-meta {
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .modal-body {
+      padding: 14px 16px 6px;
+    }
+
+    .modal-body label {
+      display: block;
+      margin-top: 12px;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .modal-body textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      margin-top: 6px;
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      background: rgba(255, 255, 255, 0.82);
+      outline: none;
+      font-weight: 650;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .modal-body select {
+      width: 100%;
+      margin-top: 6px;
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      background: rgba(255, 255, 255, 0.82);
+      outline: none;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .modal-footer {
+      padding: 12px 16px 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .modal-panel .btn.secondary {
+      border-color: rgba(15, 23, 42, 0.16);
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge" aria-hidden="true"></span>
+      <span>GsRepair</span>
+    </div>
+
+    <nav class="nav" aria-label="Navegação principal">
+      <a href="#" class="nav-link active" data-section="home">Início</a>
+      <a href="#" class="nav-link" data-section="services">Serviços</a>
+      <a href="#" class="nav-link" data-section="parts">Peças</a>
+    </nav>
+
+    <div class="topbar-right">
+      <input class="search" type="search" placeholder="Buscar..." aria-label="Buscar" />
+      <button class="icon-btn" type="button" aria-label="Notificações">🔔</button>
+      <button class="icon-btn" type="button" aria-label="Configurações">⚙️</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="section active">
+      <div class="page-head">
+        <div class="page-title">
+          <h1>Serviços Ativos no Pátio</h1>
+          <p>Overview de operações e velocidade de atendimento.</p>
+        </div>
+
+        <div class="kpis" aria-label="Indicadores">
+          <div class="kpi">
+            <div>
+              <div class="label">Total Active</div>
+              <div class="value">24</div>
+            </div>
+            <div class="icon" aria-hidden="true">🛠️</div>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">Avg Turnaround</div>
+              <div class="value">4.2h</div>
+            </div>
+            <div class="icon" aria-hidden="true">⏱️</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards-grid">
+        <article class="card card-blue" role="button" tabindex="0" data-card-id="svc-1" data-vehicle="Porsche 911 Carrera S" data-workorder="ABC - 1234" data-status="Em Progresso">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="pill progress">Em Progresso</div>
+              <div class="badge-mini">ABC - 1234</div>
+            </div>
+
+            <div class="vehicle-title">Porsche 911 Carrera S</div>
+            <div class="card-meta">Ricardo Menezes · Engine Tuning</div>
+            <div class="card-notes" data-notes="">Sem observações</div>
+
+            <div class="parts-title">Peças / Componentes</div>
+            <div class="parts">
+              <div class="part"><span class="dot" aria-hidden="true"></span>Filtro de Ar Esportivo</div>
+              <div class="part"><span class="dot" aria-hidden="true"></span>Velas de Ignição</div>
+            </div>
+
+            <div class="progress-block">
+              <div class="progress-bar" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-fill" style="width: 65%"></div>
+              </div>
+              <div class="progress-meta">Service Progress · 65%</div>
+            </div>
+
+            <div class="time-row">
+              <div class="time">2h 15m since entry</div>
+              <div class="chev" aria-hidden="true">›</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-gray" role="button" tabindex="0" data-card-id="svc-2" data-vehicle="Nissan GT-R Nismo" data-workorder="GTR - 2024" data-status="Entrada">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="pill incoming">Entrada</div>
+              <div class="badge-mini">GTR - 2024</div>
+            </div>
+
+            <div class="vehicle-title">Nissan GT-R Nismo</div>
+            <div class="card-meta">Júlia Porto · Inspection</div>
+            <div class="card-notes" data-notes="">Sem observações</div>
+
+            <div class="parts-title">Peças / Componentes</div>
+            <div class="parts">
+              <div class="part"><span class="dot" aria-hidden="true"></span>Pastilhas Brembo</div>
+              <div class="part"><span class="dot" aria-hidden="true"></span>Fluido de Arrefecimento</div>
+            </div>
+
+            <div class="progress-block">
+              <div class="progress-bar" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-fill" style="width: 5%"></div>
+              </div>
+              <div class="progress-meta">Awaiting Bay Assignment · 5%</div>
+            </div>
+
+            <div class="time-row">
+              <div class="time">12m since entry</div>
+              <div class="chev" aria-hidden="true">›</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-orange" role="button" tabindex="0" data-card-id="svc-3" data-vehicle="BMW S1000RR" data-workorder="BMW - 1000" data-status="Pronto">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="pill ready">Pronto</div>
+              <div class="badge-mini">BMW - 1000</div>
+            </div>
+
+            <div class="vehicle-title">BMW S1000RR</div>
+            <div class="card-meta">Felipe Silva · Brake Service</div>
+            <div class="card-notes" data-notes="">Sem observações</div>
+
+            <div class="parts-title">Peças / Componentes</div>
+            <div class="parts">
+              <div class="part"><span class="dot" aria-hidden="true"></span>Pastilhas de Freio</div>
+              <div class="part"><span class="dot" aria-hidden="true"></span>Sensor ABS</div>
+            </div>
+
+            <div class="progress-block">
+              <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-fill" style="width: 100%"></div>
+              </div>
+              <div class="progress-meta">Ready for Pickup · 100%</div>
+            </div>
+
+            <div class="time-row">
+              <div class="time">Notify Customer</div>
+              <div class="chev" aria-hidden="true">›</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-blue" role="button" tabindex="0" data-card-id="svc-4" data-vehicle="McLaren 720S" data-workorder="MLA - 9901" data-status="Em Progresso">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="pill progress">Em Progresso</div>
+              <div class="badge-mini">MLA - 9901</div>
+            </div>
+
+            <div class="vehicle-title">McLaren 720S</div>
+            <div class="card-meta">Técnico A. Weber · Suspension</div>
+            <div class="card-notes" data-notes="">Sem observações</div>
+
+            <div class="parts-title">Peças / Componentes</div>
+            <div class="parts">
+              <div class="part"><span class="dot" aria-hidden="true"></span>Amortecedores Hidráulicos</div>
+              <div class="part"><span class="dot" aria-hidden="true"></span>Buchas da Suspensão</div>
+            </div>
+
+            <div class="progress-block">
+              <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-fill" style="width: 30%"></div>
+              </div>
+              <div class="progress-meta">Service Progress · 30%</div>
+            </div>
+
+            <div class="time-row">
+              <div class="time">4h 40m since entry</div>
+              <div class="chev" aria-hidden="true">›</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-green" role="button" tabindex="0" data-card-id="svc-5" data-vehicle="Audi RS6 Avant" data-workorder="AUD - 6045" data-status="Pronto para Retirada">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="pill pickup">Pronto para Retirada</div>
+              <div class="badge-mini">AUD - 6045</div>
+            </div>
+
+            <div class="vehicle-title">Audi RS6 Avant</div>
+            <div class="card-meta">Marcos Oliveira · Oil Change</div>
+            <div class="card-notes" data-notes="">Sem observações</div>
+
+            <div class="parts-title">Peças / Componentes</div>
+            <div class="parts">
+              <div class="part"><span class="dot" aria-hidden="true"></span>Óleo Sintético 5W-30</div>
+              <div class="part"><span class="dot" aria-hidden="true"></span>Filtro de Óleo</div>
+            </div>
+
+            <div class="progress-block">
+              <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-fill" style="width: 100%"></div>
+              </div>
+              <div class="progress-meta">Completed · 100%</div>
+            </div>
+
+            <div class="time-row">
+              <div class="time">Invoiced 1h ago</div>
+              <div class="chev" aria-hidden="true">›</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-blue" role="button" tabindex="0" data-card-id="svc-6" data-vehicle="Mercedes-AMG GT" data-workorder="MER - 8888" data-status="Em Progresso">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="pill progress">Em Progresso</div>
+              <div class="badge-mini">MER - 8888</div>
+            </div>
+
+            <div class="vehicle-title">Mercedes-AMG GT</div>
+            <div class="card-meta">Eduardo Santos · Ceramic Coating</div>
+            <div class="card-notes" data-notes="">Sem observações</div>
+
+            <div class="parts-title">Peças / Componentes</div>
+            <div class="parts">
+              <div class="part"><span class="dot" aria-hidden="true"></span>Kit Revestimento Cerâmico</div>
+              <div class="part"><span class="dot" aria-hidden="true"></span>Selante de Rodas</div>
+            </div>
+
+            <div class="progress-block">
+              <div class="progress-bar" role="progressbar" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-fill" style="width: 82%"></div>
+              </div>
+              <div class="progress-meta">Service Progress · 82%</div>
+            </div>
+
+            <div class="time-row">
+              <div class="time">6h 10m since entry</div>
+              <div class="chev" aria-hidden="true">›</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="services" class="section">
+      <div class="page-head">
+        <div class="page-title">
+          <h1>Serviços</h1>
+          <p>Organize atendimentos por status e responsável.</p>
+        </div>
+        <div class="kpis">
+          <div class="kpi">
+            <div>
+              <div class="label">Em Progresso</div>
+              <div class="value">18</div>
+            </div>
+            <div class="icon" aria-hidden="true">🔵</div>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">Prontos</div>
+              <div class="value">6</div>
+            </div>
+            <div class="icon" aria-hidden="true">🟠</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-grid">
+        <div class="panel">
+          <h2>Fila de trabalho (exemplo)</h2>
+          <p>Esta área pode virar uma lista com filtro, detalhes e ações.</p>
+          <ul class="list">
+            <li>ABC - 1234 · Porsche · Em Progresso</li>
+            <li>GTR - 2024 · Nissan · Entrada</li>
+            <li>BMW - 1000 · BMW · Pronto</li>
+            <li>MLA - 9901 · McLaren · Em Progresso</li>
+            <li>AUD - 6045 · Audi · Pronto para Retirada</li>
+            <li>MER - 8888 · Mercedes · Em Progresso</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h2>Atalhos</h2>
+          <p>Opções comuns para o mecânico.</p>
+          <div class="cta">
+            <strong>Novo Work Order</strong>
+            <button class="btn" type="button">Criar</button>
+          </div>
+          <div class="muted-note">Dica: depois conecte isso ao seu backend/BD.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="parts" class="section">
+      <div class="page-head">
+        <div class="page-title">
+          <h1>Peças</h1>
+          <p>Controle de estoque e reposição.</p>
+        </div>
+        <div class="kpis">
+          <div class="kpi">
+            <div>
+              <div class="label">Em estoque</div>
+              <div class="value">142</div>
+            </div>
+            <div class="icon" aria-hidden="true">📦</div>
+          </div>
+          <div class="kpi">
+            <div>
+              <div class="label">Baixo estoque</div>
+              <div class="value">9</div>
+            </div>
+            <div class="icon" aria-hidden="true">⚠️</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-grid">
+        <div class="panel">
+          <h2>Itens críticos (exemplo)</h2>
+          <p>Priorize reposição para evitar atrasos.</p>
+          <ul class="list">
+            <li>Pastilhas Brembo · 3 un</li>
+            <li>Filtro de óleo · 2 un</li>
+            <li>Sensor ABS · 1 un</li>
+            <li>Selante de rodas · 4 un</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h2>Atalhos</h2>
+          <p>Fluxos que você pode implementar.</p>
+          <div class="cta">
+            <strong>Registrar entrada</strong>
+            <button class="btn secondary" type="button">Dar baixa</button>
+          </div>
+          <div class="muted-note">Depois conecte com cadastro de fornecedores.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="cardModalOverlay" class="modal-overlay" hidden>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div>
+          <div class="badge-mini" id="modalWorkOrder"></div>
+          <h2 id="modalTitle"></h2>
+          <div class="modal-meta" id="modalMeta"></div>
+        </div>
+        <button id="modalClose" class="icon-btn" type="button" aria-label="Fechar">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <label for="modalNotes">Observações</label>
+        <textarea id="modalNotes" placeholder="Descreva o que foi feito / observado..."></textarea>
+
+        <label for="modalStatusSelect">Status do veículo</label>
+        <select id="modalStatusSelect">
+          <option value="Entrada">Entrada</option>
+          <option value="Em Progresso">Em Progresso</option>
+          <option value="Pronto">Pronto</option>
+          <option value="Pronto para Retirada">Pronto para Retirada</option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button id="modalCancel" class="btn secondary" type="button">Cancelar</button>
+        <button id="modalSave" class="btn" type="button">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const navLinks = document.querySelectorAll(".nav-link");
+    const sections = document.querySelectorAll(".section");
+
+    function showSection(id) {
+      sections.forEach((s) => s.classList.toggle("active", s.id === id));
+      navLinks.forEach((a) => a.classList.toggle("active", a.dataset.section === id));
+    }
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        showSection(link.dataset.section);
+      });
+    });
+
+    // ===== Modal flutuante dos cards (observações + status) =====
+    const overlay = document.getElementById("cardModalOverlay");
+    const modalClose = document.getElementById("modalClose");
+    const modalCancel = document.getElementById("modalCancel");
+    const modalSave = document.getElementById("modalSave");
+
+    const modalTitle = document.getElementById("modalTitle");
+    const modalWorkOrder = document.getElementById("modalWorkOrder");
+    const modalMeta = document.getElementById("modalMeta");
+    const modalNotes = document.getElementById("modalNotes");
+    const modalStatusSelect = document.getElementById("modalStatusSelect");
+
+    const statusConfig = {
+      Entrada: { pillClass: "incoming", pillText: "Entrada", progress: 0 },
+      "Em Progresso": { pillClass: "progress", pillText: "Em Progresso", progress: 50 },
+      Pronto: { pillClass: "ready", pillText: "Pronto", progress: 80 },
+      "Pronto para Retirada": { pillClass: "pickup", pillText: "Pronto para Retirada", progress: 100 },
+    };
+
+    let currentCard = null;
+    let lastFocus = null;
+
+    function setOverlayVisible(visible) {
+      if (visible) overlay.removeAttribute("hidden");
+      else overlay.setAttribute("hidden", "");
+    }
+
+    function closeModal() {
+      setOverlayVisible(false);
+      document.body.style.overflow = "";
+      if (lastFocus && typeof lastFocus.focus === "function") {
+        lastFocus.focus();
+      }
+      currentCard = null;
+    }
+
+    function syncCardProgress(card, status) {
+      const config = statusConfig[status] || statusConfig["Em Progresso"];
+      const progressBar = card.querySelector(".progress-bar");
+      const progressFill = card.querySelector(".progress-fill");
+      const progressMeta = card.querySelector(".progress-meta");
+
+      if (progressBar) progressBar.setAttribute("aria-valuenow", String(config.progress));
+      if (progressFill) progressFill.style.width = `${config.progress}%`;
+      if (progressMeta) progressMeta.textContent = `Progresso do Serviço · ${config.progress}%`;
+    }
+
+    function openModal(card) {
+      currentCard = card;
+      lastFocus = document.activeElement;
+
+      modalWorkOrder.textContent = card.dataset.workorder || "";
+      modalTitle.textContent = card.dataset.vehicle || card.querySelector(".vehicle-title")?.textContent?.trim() || "";
+      modalMeta.textContent = card.querySelector(".card-meta")?.textContent?.trim() || "";
+
+      const notesEl = card.querySelector(".card-notes");
+      const notesValue = notesEl?.dataset?.notes ?? notesEl?.textContent?.trim() ?? "";
+      modalNotes.value = notesValue === "Sem observações" ? "" : notesValue;
+
+      const currentStatus = card.dataset.status || card.querySelector(".pill")?.textContent?.trim() || "Em Progresso";
+      modalStatusSelect.value = statusConfig[currentStatus] ? currentStatus : "Em Progresso";
+
+      setOverlayVisible(true);
+      document.body.style.overflow = "hidden";
+      modalNotes.focus();
+    }
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    modalClose.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeModal();
+    });
+    modalCancel.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeModal();
+    });
+
+    modalSave.addEventListener("click", () => {
+      if (!currentCard) return;
+
+      const selectedStatus = modalStatusSelect.value;
+      const config = statusConfig[selectedStatus] || statusConfig["Em Progresso"];
+
+      // Atualiza o "pill" de status do card
+      const pill = currentCard.querySelector(".pill");
+      if (pill) {
+        pill.className = `pill ${config.pillClass}`;
+        pill.textContent = config.pillText;
+      }
+
+      currentCard.dataset.status = selectedStatus;
+      syncCardProgress(currentCard, selectedStatus);
+
+      // Atualiza observações no card
+      const notesEl = currentCard.querySelector(".card-notes");
+      const notesValue = modalNotes.value.trim();
+      if (notesEl) {
+        notesEl.dataset.notes = notesValue;
+        notesEl.textContent = notesValue ? `Obs: ${notesValue}` : "Sem observações";
+      }
+
+      closeModal();
+    });
+
+    // Peças clicáveis (check/uncheck)
+    document.querySelectorAll(".parts .part").forEach((part) => {
+      part.setAttribute("role", "checkbox");
+      part.setAttribute("tabindex", "0");
+      part.setAttribute("aria-checked", "false");
+
+      const toggleCheck = () => {
+        const checked = part.classList.toggle("checked");
+        part.setAttribute("aria-checked", checked ? "true" : "false");
+      };
+
+      part.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleCheck();
+      });
+
+      part.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleCheck();
+        }
+      });
+    });
+
+    // Cards clicáveis
+    document.querySelectorAll(".card").forEach((card) => {
+      const status = card.dataset.status || card.querySelector(".pill")?.textContent?.trim() || "Em Progresso";
+      syncCardProgress(card, status);
+
+      card.addEventListener("click", () => openModal(card));
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openModal(card);
+        }
+      });
+    });
+
+    // Fecha no ESC
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay && !overlay.hasAttribute("hidden")) {
+        e.preventDefault();
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

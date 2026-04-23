@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteCar</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+    <main class="container">
+        <section class="login-panel">
+            <form>
+                <h1 id="header_title">EliteCar</h1>
+                <p class="subtitle">Acesse sua conta para continuar</p>
+                <div class="input_box">
+                    <input id="usuario" placeholder="Digite seu email" type="email">
+                </div>
+                <div class="input_box">
+                    <input id="senha" placeholder="Digite sua senha" type="password">
+                </div>
+                <button onclick="enviar()">Entrar</button>
+            </form>
+        </section>
+        <section class="welcome-visual" aria-label="Ilustração de boas-vindas">
+            <div class="character-frame">
+                <img src="cute-3d-animated-cartoon-character-of-an-adult-mec.png" alt="Mascote mecânico 3D de boas-vindas">
+            </div>
+        </section>
+
+
+        <script>
+            
+            function enviar(){
+
+                const mec_usuario = "gabriellopes12300@gmail.com"
+                const mec_senha = "@Ga20050808"
+                event.preventDefault();
+                
+                const usuario = document.querySelector("#usuario").value
+                const senha = document.querySelector("#senha").value
+
+                if (usuario == '' || usuario == null || senha == '' || senha == null){
+                    alert("Digite um nome de usuário e senha")
+                }
+
+                else if (usuario == mec_usuario && senha == mec_senha ){
+                    window.location.href = "Test.html";
+                }
+                else{
+                    alert("Usuário ou senha incorretos")
+                }
+
+                console.log(usuario, senha)
+            }
+
+
+
+        </script>
+    </main>
+</body>
+</html>
