@@ -34,6 +34,9 @@
 
                 const mec_usuario = "gabriellopes12300@gmail.com"
                 const mec_senha = "@Ga20050808"
+
+                const mec_usuario2 = "joaobaitola@gmail.com"
+                const mec_senha2 = "1234"
                 event.preventDefault();
                 
                 const usuario = document.querySelector("#usuario").value
@@ -44,6 +47,10 @@
                 }
 
                 else if (usuario == mec_usuario && senha == mec_senha ){
+                    window.location.href = "Test.html";
+                }
+
+                else if (usuario == mec_usuario2 && senha == mec_senha2 ){
                     window.location.href = "Test.html";
                 }
                 else{
